@@ -11,6 +11,7 @@ public class Mensagem {
 
     }
 
+    // método para exibir uma mensagem tipo alert na tela
     public void show(String titulo, String texto){
 
         AlertDialog.Builder msg = new AlertDialog.Builder(_context);

@@ -14,14 +14,16 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity implements OnClickListener {
 
+    //Variáveis
     EditText editNome, editId, editQtde, editPreco;
     Button btnIncluir, btnExcluir, btnAlterar, btnPesquisar, btnListar;
     String nome, id, qtde, preco;
 
-
+    // Banco
     SQLiteDatabase db;
 
 
+    // instancia da classe mensagem
     private Mensagem mensagem = new Mensagem(MainActivity.this);
 
 
@@ -48,12 +50,15 @@ public class MainActivity extends Activity implements OnClickListener {
         btnPesquisar.setOnClickListener(this);
         btnListar.setOnClickListener(this);
 
+        //abre o banco
         db = openOrCreateDatabase("DbLoja", Context.MODE_PRIVATE, null);
 
+        //caso não exista, cria um novo
         db.execSQL("CREATE TABLE IF NOT EXISTS produto(nome varchar, id varchar, qtde varchar, preco varchar)");
 
     }
 
+    //classe com os eventos dos botões
     @Override
     public void onClick(View view){
 
@@ -68,17 +73,20 @@ public class MainActivity extends Activity implements OnClickListener {
                 mensagem.show("Erro", "Valor inválido");
                 return;
             }
+            //executa o codigo sql para inserir os dados
             db.execSQL("INSERT INTO produto VALUES('"+ nome + "','" + id + "','" + qtde + "','" + preco + "');");
             mensagem.show("Aceito", "Produto Adicionado!");
             limparCampos();
         }
         if (view == btnListar){
 
+            //Cria um cursor e faz o select de todo o banco
             Cursor c = db.rawQuery("SELECT * FROM produto", null);
             if (c.getCount() == 0){
                 mensagem.show("Alerta", "Nenhum registro!");
                 return;
             }
+
 
             StringBuffer buffer = new StringBuffer();
             while(c.moveToNext()){
@@ -147,12 +155,12 @@ public class MainActivity extends Activity implements OnClickListener {
         }
 
     }
-
+    // verifica campos vazios
     public boolean verificaCampos(){
 
         return (nome.trim().length() == 0 || id.trim().length() == 0 || qtde.trim().length() == 0 || preco.trim().length() == 0);
     }
-
+    //limpa os campos do form
     public void limparCampos(){
         editNome.setText("");
         editId.setText("");
